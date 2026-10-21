@@ -1,0 +1,6 @@
+
+data/ratings_export.csv
+__pycache__/
+.venv/
+venv/
+.env
