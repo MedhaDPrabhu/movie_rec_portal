@@ -20,7 +20,6 @@ REQUIRED_COLUMNS = [
 ]
 
 
-# Convert the stored genre list into readable text
 def get_genres(value):
     try:
         genres = json.loads(value) if isinstance(value, str) else []
@@ -30,8 +29,6 @@ def get_genres(value):
     except (ValueError, TypeError):
         return ""
 
-
-# Convert a genre field into a list for chart calculations
 def genre_list(value):
     try:
         genres = json.loads(value) if isinstance(value, str) else []
@@ -74,8 +71,6 @@ class MovieManager:
                     f"Missing required columns: {missing_columns}"
                 )
 
-            # Director is not present in the supplied dataset.
-            # Add it so the page can manage director information.
             if "director" not in data.columns:
                 data["director"] = ""
 
@@ -114,7 +109,6 @@ class MovieManager:
                 temp_path = temp_file.name
                 data.to_csv(temp_file, index=False)
 
-            # Replace the original only after writing succeeds
             os.replace(temp_path, self.file_path)
             temp_path = None
 
@@ -235,8 +229,6 @@ except ValueError as error:
     st.stop()
 
 
-# CREATE
-
 st.subheader("Add a new movie")
 
 with st.form("create_movie"):
@@ -269,9 +261,6 @@ if create_button:
         st.rerun()
     except ValueError as error:
         st.error(str(error))
-
-
-# READ AND FILTER
 
 st.subheader("Browse and search movies")
 
@@ -346,9 +335,6 @@ st.caption(
     f"Showing {len(filtered):,} of {len(df):,} movies."
 )
 
-
-# UPDATE
-
 st.subheader("Update a movie")
 
 with st.form("update_movie"):
@@ -386,9 +372,6 @@ if update_button:
     except ValueError as error:
         st.error(str(error))
 
-
-# DELETE
-
 st.subheader("Delete a movie")
 
 with st.form("delete_movie"):
@@ -408,9 +391,6 @@ if delete_button:
             st.rerun()
         except ValueError as error:
             st.error(str(error))
-
-
-# ANALYTICS
 
 st.header("Movie Analytics")
 
@@ -440,9 +420,6 @@ st.write(
     f"{runtime_data.isna().sum():,}"
 )
 
-
-# CHART 1: TOP GENRES
-
 st.subheader("Chart 1: Top Genres")
 
 genre_counts = (
@@ -468,9 +445,6 @@ if not genre_counts.empty:
 else:
     st.info("No genre information is available.")
 
-
-# CHART 2: MOVIES BY DECADE
-
 st.subheader("Chart 2: Movies Across Decades")
 
 decades = (year_data.dropna() // 10 * 10).astype(int)
@@ -491,9 +465,6 @@ if not decade_counts.empty:
     plt.close(fig2)
 else:
     st.info("No release-year information is available.")
-
-
-# EXPORT REPORT
 
 st.header("Download Movie Report")
 
