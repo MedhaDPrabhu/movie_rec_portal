@@ -43,24 +43,6 @@ with col3:
 
 st.divider()
 
-st.subheader("Project Features")
-
-feature1, feature2, feature3 = st.columns(3)
-
-with feature1:
-    st.metric("User Dataset", "users_export.csv")
-    st.caption("User profiles and activity")
-
-with feature2:
-    st.metric("Movie Dataset", "movie_data.csv")
-    st.caption("Movie metadata and catalogue management")
-
-with feature3:
-    st.metric("Ratings Dataset", "ratings_export.csv")
-    st.caption("Rating management and analysis")
-
-st.divider()
-
 st.subheader("Movie Library Features")
 
 movie1, movie2, movie3 = st.columns(3)
@@ -89,7 +71,4 @@ st.info(
     "or Ratings page."
 )
 
-st.write(
-    "The portal uses simple data analysis and rating statistics. "
-    "It does not use machine learning."
-)
+
