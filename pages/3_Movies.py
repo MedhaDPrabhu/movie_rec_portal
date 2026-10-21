@@ -432,7 +432,7 @@ genre_counts = (
 )
 
 if not genre_counts.empty:
-    fig1, ax1 = plt.subplots()
+    fig1, ax1 = plt.subplots(figsize=(10, 6))
     genre_counts.sort_values().plot(
         kind="barh", ax=ax1
     )
@@ -451,7 +451,7 @@ decades = (year_data.dropna() // 10 * 10).astype(int)
 decade_counts = decades.value_counts().sort_index()
 
 if not decade_counts.empty:
-    fig2, ax2 = plt.subplots()
+    fig2, ax2 = plt.subplots(figsize=(10, 6))
     ax2.bar(
         decade_counts.index.astype(str) + "s",
         decade_counts.values
