@@ -11,7 +11,8 @@ st.title("🎬 Movie Recommendation Portal")
 
 st.write(
     "Welcome to our Movie Recommendation Portal. "
-    "Explore movie data, manage user profiles, and analyze ratings."
+    "Explore the movie library, manage user profiles, "
+    "and analyze movie ratings."
 )
 
 st.subheader("What can you do here?")
@@ -28,13 +29,16 @@ with col1:
 with col2:
     st.write("### 🎞️ Movies")
     st.write(
-        "Browse movies and explore movie information and genres."
+        "Manage the movie catalogue, add new movies, "
+        "search by title, filter by genre and release year, "
+        "update movie details, and delete catalogue entries."
     )
 
 with col3:
     st.write("### ⭐ Ratings")
     st.write(
-        "Explore movie ratings and analyze rating patterns."
+        "Explore movie ratings, manage rating records, "
+        "and analyze rating patterns."
     )
 
 st.divider()
@@ -48,14 +52,36 @@ with feature1:
     st.caption("User profiles and activity")
 
 with feature2:
-    st.write("**Data Management**")
-    st.caption("Create, view, update, and delete records.")
+    st.metric("Movie Dataset", "movie_data.csv")
+    st.caption("Movie metadata and catalogue management")
 
 with feature3:
-    st.write("**Data Analysis**")
-    st.caption(
-        "Summary statistics, interactive charts, "
-        "and downloadable reports."
+    st.metric("Ratings Dataset", "ratings_export.csv")
+    st.caption("Rating management and analysis")
+
+st.divider()
+
+st.subheader("Movie Library Features")
+
+movie1, movie2, movie3 = st.columns(3)
+
+with movie1:
+    st.write("### 📝 Catalogue Management")
+    st.write(
+        "Create, view, update, and delete movie records."
+    )
+
+with movie2:
+    st.write("### 🔎 Search and Filter")
+    st.write(
+        "Find movies by title, genre, and release year."
+    )
+
+with movie3:
+    st.write("### 📊 Movie Analytics")
+    st.write(
+        "Explore the most common genres and movie "
+        "distribution across decades."
     )
 
 st.info(
@@ -64,6 +90,6 @@ st.info(
 )
 
 st.write(
-    "Recommendations use simple rating statistics and popularity, "
-    "not machine learning."
+    "The portal uses simple data analysis and rating statistics. "
+    "It does not use machine learning."
 )
