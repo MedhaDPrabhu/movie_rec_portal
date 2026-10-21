@@ -9,21 +9,14 @@ from datetime import datetime
 from uuid import uuid4
 
 
-# --------------------------------------------------
-# 1. PAGE SETTINGS AND CSV LOCATION
-# --------------------------------------------------
-
 st.set_page_config(
     page_title="User Profiles",
-    page_icon="👥",
     layout="wide"
 )
 
-st.title("👥 User Profiles & Activity")
+st.title("User Profiles & Activity")
 st.write("Manage user records and explore user activity.")
 
-# This file is inside the pages folder.
-# The CSV is inside the data folder at the project root.
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CSV_FILE = PROJECT_ROOT / "data" / "users_export.csv"
 
@@ -40,11 +33,6 @@ NUMERIC_COLUMNS = [
     "num_reviews"
 ]
 
-
-# --------------------------------------------------
-# 2. CUSTOM CLASS FOR CSV AND CRUD OPERATIONS
-# --------------------------------------------------
-
 class UserManager:
 
     def __init__(self, file_path):
@@ -53,8 +41,6 @@ class UserManager:
 
     @property
     def data(self):
-        # Return a copy so outside code cannot directly
-        # change the class's stored DataFrame.
         return self._data.copy()
 
     def load_data(self):
@@ -88,10 +74,8 @@ class UserManager:
                     + ", ".join(missing_columns)
                 )
 
-            # Keep the original schema and column order.
             df = df[COLUMNS].copy()
 
-            # Clean IDs and usernames.
             df["_id"] = df["_id"].str.strip()
             df["username"] = df["username"].str.strip()
 
@@ -101,14 +85,12 @@ class UserManager:
             if df["_id"].duplicated().any():
                 raise ValueError("Duplicate user IDs exist in the CSV.")
 
-            # Convert numeric values safely.
             for col in NUMERIC_COLUMNS:
                 original = df[col].copy()
                 converted = pd.to_numeric(
                     original, errors="coerce"
                 )
 
-                # Distinguish invalid non-empty text from blanks.
                 invalid = (
                     original.notna()
                     & original.astype(str).str.strip().ne("")
@@ -144,7 +126,6 @@ class UserManager:
         else:
             return self.data
         finally:
-            # The read attempt has finished, even if it failed.
             pass
 
     def save_data(self, df):
@@ -166,8 +147,6 @@ class UserManager:
                         f"Invalid values in column '{col}'."
                     )
 
-            # Keep the temporary file in the same folder so that
-            # os.replace can replace the original atomically.
             with tempfile.NamedTemporaryFile(
                 mode="w",
                 encoding="utf-8",
@@ -180,7 +159,6 @@ class UserManager:
                 temp_path = Path(temp_file.name)
                 df.to_csv(temp_file, index=False)
 
-            # Replace the original only after the write succeeds.
             os.replace(temp_path, self.file_path)
             self._data = df.copy()
 
@@ -195,7 +173,6 @@ class UserManager:
         else:
             return True
         finally:
-            # Remove a leftover temporary file after a failed write.
             if temp_path is not None and temp_path.exists():
                 try:
                     temp_path.unlink()
@@ -288,10 +265,6 @@ class UserManager:
         return True
 
 
-# --------------------------------------------------
-# 3. LOAD THE CSV WITH FRIENDLY ERROR MESSAGES
-# --------------------------------------------------
-
 manager = UserManager(CSV_FILE)
 
 try:
@@ -311,10 +284,6 @@ except Exception:
     st.stop()
 
 
-# --------------------------------------------------
-# 4. MISSING-DATA HANDLING
-# --------------------------------------------------
-
 missing_names = int(data["display_name"].isna().sum())
 missing_pages = int(data["num_ratings_pages"].isna().sum())
 
@@ -330,16 +299,11 @@ st.caption(
     "excluded from averages and charts that require those values."
 )
 
-# A display-only copy: the saved original data is not changed.
 display_data = data.copy()
 display_data["display_name"] = (
     display_data["display_name"].fillna("Unknown")
 )
 
-
-# --------------------------------------------------
-# 5. THREE SUMMARY STATISTICS
-# --------------------------------------------------
 
 st.subheader("Summary Statistics")
 
@@ -363,10 +327,6 @@ c3.metric(
     if pd.notna(average_pages) else "N/A"
 )
 
-
-# --------------------------------------------------
-# 6. SEARCH, FILTER AND VIEW RECORDS
-# --------------------------------------------------
 
 st.subheader("Search and Filter Users")
 
@@ -397,15 +357,10 @@ st.write(f"Matching records: {len(filtered):,}")
 st.dataframe(filtered, use_container_width=True)
 
 
-# --------------------------------------------------
-# 7. TWO DYNAMIC CHARTS
-# --------------------------------------------------
-
 st.subheader("User Activity Charts")
 
 chart_data = filtered.copy()
 
-# Activity groups use simple conditions, not machine learning.
 chart_data["Activity Level"] = pd.cut(
     chart_data["num_reviews"],
     bins=[-1, 100, 500, float("inf")],
@@ -444,10 +399,6 @@ with right:
         st.info("No complete numeric records match these filters.")
 
 
-# --------------------------------------------------
-# 8. CREATE A USER
-# --------------------------------------------------
-
 st.subheader("Add a New User")
 
 with st.form("add_user_form"):
@@ -483,10 +434,6 @@ if add_clicked:
         st.success(f"User added successfully. ID: {new_id}")
         st.rerun()
 
-
-# --------------------------------------------------
-# 9. UPDATE AN EXISTING USER
-# --------------------------------------------------
 
 st.subheader("Update User Details")
 
@@ -556,10 +503,6 @@ else:
     st.info("There are no users to edit.")
 
 
-# --------------------------------------------------
-# 10. DELETE A USER WITH CONFIRMATION
-# --------------------------------------------------
-
 st.subheader("Delete a User")
 
 if user_ids:
@@ -587,10 +530,6 @@ if user_ids:
                 st.success("User deleted successfully.")
                 st.rerun()
 
-
-# --------------------------------------------------
-# 11. EXPORT A SUMMARY REPORT
-# --------------------------------------------------
 
 st.subheader("Download Summary Report")
 
