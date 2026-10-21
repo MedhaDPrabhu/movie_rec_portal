@@ -201,8 +201,6 @@ except ValueError as error:
     st.stop()
 
 
-# CREATE
-
 st.subheader("Add a rating")
 
 with st.form("create_rating_form"):
@@ -225,8 +223,6 @@ if create_button:
     except ValueError as error:
         st.error(str(error))
 
-
-# READ
 
 st.subheader("View and search ratings")
 
@@ -280,8 +276,6 @@ st.dataframe(filtered, use_container_width=True)
 st.caption(f"Showing {len(filtered):,} of {len(df):,} records.")
 
 
-# UPDATE
-
 st.subheader("Update a rating")
 
 with st.form("update_rating_form"):
@@ -307,8 +301,6 @@ if update_button:
         st.error(str(error))
 
 
-# DELETE
-
 st.subheader("Delete a rating")
 
 with st.form("delete_rating_form"):
@@ -329,8 +321,6 @@ if delete_button:
         except ValueError as error:
             st.error(str(error))
 
-
-# ANALYSIS
 
 st.header("Rating Analysis")
 
@@ -375,14 +365,12 @@ st.caption(
 )
 
 
-# CHART 1: BAR CHART
-
 st.subheader("Chart 1: Rating Distribution")
 
 if not valid_ratings.empty:
     counts = valid_ratings.value_counts().sort_index()
 
-    fig1, ax1 = plt.subplots()
+    fig1, ax1 = plt.subplots(figsize=(10, 6))
     ax1.bar(counts.index, counts.values)
     ax1.set_xlabel("Rating")
     ax1.set_ylabel("Number of Ratings")
@@ -394,8 +382,6 @@ if not valid_ratings.empty:
 else:
     st.info("No valid ratings are available for this chart.")
 
-
-# CHART 2: LINE CHART
 
 st.subheader("Chart 2: Average Rating by Movie")
 
@@ -415,7 +401,7 @@ movie_summary = (
 )
 
 if not movie_summary.empty:
-    fig2, ax2 = plt.subplots()
+    fig2, ax2 = plt.subplots(figsize=(10, 6))
 
     ax2.plot(
         movie_summary.index.astype(str),
@@ -435,8 +421,6 @@ if not movie_summary.empty:
 else:
     st.info("No valid movie ratings are available for this chart.")
 
-
-# EXPORT REPORT
 
 st.header("Download Summary Report")
 
